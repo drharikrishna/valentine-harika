@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<title>For Harika ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top, #4a0d1a, #1a050a 60%),
+    linear-gradient(135deg, #3b0a14, #140407);
+  font-family: 'Segoe UI', sans-serif;
+  color: #ffe6dc;
+}
+
+/* Candle glow */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,170,140,0.22), transparent 65%);
+  animation: flicker 3.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes flicker {
+  0%,100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 90%;
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 40px;
+}
+
+/* Buttons */
+button {
+  font-size: 1.6rem;
+  padding: 20px 46px;
+  min-width: 180px;
+  border-radius: 40px;
+  border: none;
+  cursor: pointer;
+}
+
+/* YES */
+#yes {
+  background: #c9184a;
+  color: white;
+  margin-right: 20px;
+  animation: yesPulse 2.5s infinite;
+}
+
+@keyframes yesPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* NO */
+#no {
+  position: absolute;
+  background: #555;
+  color: white;
+  transition: left 0.35s ease-out, top 0.35s ease-out;
+}
+
+/* Handwritten name */
+.name-wrapper {
+  display: inline-block;
+}
+
+.name {
+  font-family: 'Allura', cursive;
+  font-size: 4.2rem;
+  letter-spacing: 5px;
+  color: #ffd9b3;
+  text-shadow: 0 0 18px rgba(255,200,150,0.75);
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  animation: writeName 3s steps(14, end) forwards;
+}
+
+@keyframes writeName {
+  to { width: 100%; }
+}
+
+/* Underline flourish */
+.underline {
+  height: 3px;
+  width: 0;
+  margin: 6px auto 0;
+  background: linear-gradient(to right, transparent, #ffd9b3, transparent);
+  animation: drawLine 1.5s ease forwards;
+  animation-delay: 3.2s;
+}
+
+@keyframes drawLine {
+  to { width: 100%; }
+}
+
+/* Photo */
+.photo {
+  width: 85%;
+  max-width: 360px;
+  border-radius: 22px;
+  margin: 24px auto 10px;
+  box-shadow:
+    0 0 35px rgba(255,170,130,0.45),
+    0 0 60px rgba(180,70,90,0.25);
+  opacity: 0;
+  transform: scale(0.96);
+  animation: photoReveal 2.5s forwards;
+  animation-delay: 3.8s;
+}
+
+@keyframes photoReveal {
+  to { opacity: 1; transform: scale(1); }
+}
+
+.caption {
+  font-size: 1.05rem;
+  font-style: italic;
+  color: #f5c6b3;
+  opacity: 0;
+  animation: fadeIn 2s forwards;
+  animation-delay: 5.2s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.heart {
+  font-size: 140px;
+  animation: beat 1.1s infinite;
+  margin-top: 10px;
+}
+
+@keyframes beat {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.18); }
+  60% { transform: scale(1); }
+}
+
+.love-text {
+  font-size: 1.7rem;
+  margin-top: 10px;
+}
+
+.hidden { display: none; }
+
+.forever {
+  font-size: 2.6rem;
+  opacity: 0;
+  animation: fadeIn 3s forwards;
+}
+</style>
+</head>
+
+<body>
+
+<div class="center" id="questionBox">
+  <h1>Will you be my Valentine? 🕯️❤️</h1>
+  <button id="yes">Yes 💕</button>
+  <button id="no">No 😜</button>
+</div>
+
+<div class="center hidden" id="loveBox">
+  <div class="name-wrapper">
+    <div class="name">Harika</div>
+    <div class="underline"></div>
+  </div>
+
+  <img src="couple.jpg" alt="Us" class="photo">
+  <div class="caption">Every picture with you feels like home</div>
+
+  <div class="heart">❤️</div>
+  <div class="love-text">You just made my world brighter 🥰</div>
+</div>
+
+<div class="center hidden" id="foreverBox">
+  <div class="forever">Forever starts today 💍✨</div>
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const questionBox = document.getElementById("questionBox");
+const loveBox = document.getElementById("loveBox");
+const foreverBox = document.getElementById("foreverBox");
+
+/* Ink sound (generated) */
+function playInkSound() {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(800, ctx.currentTime);
+  gain.gain.setValueAtTime(0.03, ctx.currentTime);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+
+  osc.start();
+  osc.stop(ctx.currentTime + 0.35);
+}
+
+/* Mischievous NO */
+function moveNo() {
+  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", e => {
+  e.preventDefault();
+  moveNo();
+});
+
+/* YES */
+yesBtn.addEventListener("click", () => {
+  questionBox.classList.add("hidden");
+  loveBox.classList.remove("hidden");
+
+  setTimeout(playInkSound, 200);
+
+  setTimeout(() => {
+    loveBox.classList.add("hidden");
+    foreverBox.classList.remove("hidden");
+  }, 11000);
+});
+
+moveNo();
+</script>
+
+</body>
+</html>
