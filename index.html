@@ -13,9 +13,7 @@ body {
   margin: 0;
   height: 100vh;
   overflow: hidden;
-  background:
-    radial-gradient(circle at top, #4a0d1a, #1a050a 60%),
-    linear-gradient(135deg, #3b0a14, #140407);
+  background: radial-gradient(circle at top, #4a0d1a, #1a050a 65%);
   font-family: 'Segoe UI', sans-serif;
   color: #ffe6dc;
 }
@@ -45,7 +43,7 @@ body::before {
 }
 
 h1 {
-  font-size: 2.4rem;
+  font-size: 2.3rem;
   margin-bottom: 40px;
 }
 
@@ -59,60 +57,50 @@ button {
   cursor: pointer;
 }
 
-/* YES */
 #yes {
   background: #c9184a;
   color: white;
-  margin-right: 20px;
-  animation: yesPulse 2.5s infinite;
+  animation: pulse 2.5s infinite;
 }
 
-@keyframes yesPulse {
+@keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.08); }
   100% { transform: scale(1); }
 }
 
-/* NO */
 #no {
   position: absolute;
   background: #555;
   color: white;
-  transition: left 0.35s ease-out, top 0.35s ease-out;
+  transition: left 0.4s ease, top 0.4s ease;
 }
 
 /* Handwritten name */
-.name-wrapper {
-  display: inline-block;
-}
-
 .name {
   font-family: 'Allura', cursive;
   font-size: 4.2rem;
-  letter-spacing: 5px;
   color: #ffd9b3;
-  text-shadow: 0 0 18px rgba(255,200,150,0.75);
   overflow: hidden;
   white-space: nowrap;
   width: 0;
-  animation: writeName 3s steps(14, end) forwards;
+  animation: write 3s steps(14) forwards;
 }
 
-@keyframes writeName {
+@keyframes write {
   to { width: 100%; }
 }
 
-/* Underline flourish */
 .underline {
   height: 3px;
   width: 0;
-  margin: 6px auto 0;
+  margin: 8px auto;
   background: linear-gradient(to right, transparent, #ffd9b3, transparent);
-  animation: drawLine 1.5s ease forwards;
-  animation-delay: 3.2s;
+  animation: underline 1.5s ease forwards;
+  animation-delay: 3s;
 }
 
-@keyframes drawLine {
+@keyframes underline {
   to { width: 100%; }
 }
 
@@ -121,27 +109,18 @@ button {
   width: 85%;
   max-width: 360px;
   border-radius: 22px;
-  margin: 24px auto 10px;
-  box-shadow:
-    0 0 35px rgba(255,170,130,0.45),
-    0 0 60px rgba(180,70,90,0.25);
+  margin: 22px auto 8px;
+  box-shadow: 0 0 35px rgba(255,170,130,0.45);
   opacity: 0;
-  transform: scale(0.96);
-  animation: photoReveal 2.5s forwards;
+  animation: fadeIn 2.5s forwards;
   animation-delay: 3.8s;
 }
 
-@keyframes photoReveal {
-  to { opacity: 1; transform: scale(1); }
-}
-
 .caption {
-  font-size: 1.05rem;
   font-style: italic;
-  color: #f5c6b3;
   opacity: 0;
   animation: fadeIn 2s forwards;
-  animation-delay: 5.2s;
+  animation-delay: 5s;
 }
 
 @keyframes fadeIn {
@@ -149,9 +128,8 @@ button {
 }
 
 .heart {
-  font-size: 140px;
+  font-size: 130px;
   animation: beat 1.1s infinite;
-  margin-top: 10px;
 }
 
 @keyframes beat {
@@ -160,17 +138,18 @@ button {
   60% { transform: scale(1); }
 }
 
-.love-text {
-  font-size: 1.7rem;
-  margin-top: 10px;
-}
-
 .hidden { display: none; }
 
-.forever {
-  font-size: 2.6rem;
-  opacity: 0;
-  animation: fadeIn 3s forwards;
+/* Roses */
+.rose {
+  position: absolute;
+  top: -60px;
+  font-size: 38px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(360deg); }
 }
 </style>
 </head>
@@ -184,72 +163,84 @@ button {
 </div>
 
 <div class="center hidden" id="loveBox">
-  <div class="name-wrapper">
-    <div class="name">Harika</div>
-    <div class="underline"></div>
-  </div>
-
-  <img src="couple.jpg" alt="Us" class="photo">
+  <div class="name">Harika</div>
+  <div class="underline"></div>
+  <img src="couple.jpg" class="photo">
   <div class="caption">Every picture with you feels like home</div>
-
   <div class="heart">❤️</div>
-  <div class="love-text">You just made my world brighter 🥰</div>
 </div>
 
 <div class="center hidden" id="foreverBox">
-  <div class="forever">Forever starts today 💍✨</div>
+  <div style="font-size:2.6rem">Forever starts today 💍✨</div>
 </div>
 
 <script>
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const questionBox = document.getElementById("questionBox");
-const loveBox = document.getElementById("loveBox");
-const foreverBox = document.getElementById("foreverBox");
+const yes = document.getElementById("yes");
+const no = document.getElementById("no");
+const q = document.getElementById("questionBox");
+const love = document.getElementById("loveBox");
+const forever = document.getElementById("foreverBox");
 
-/* Ink sound (generated) */
-function playInkSound() {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
+let yesDodges = 0;
 
-  osc.type = "triangle";
-  osc.frequency.setValueAtTime(800, ctx.currentTime);
-  gain.gain.setValueAtTime(0.03, ctx.currentTime);
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.start();
-  osc.stop(ctx.currentTime + 0.35);
+/* REAL ink sound */
+function playInk() {
+  const ctx = new AudioContext();
+  const buffer = ctx.createBuffer(1, ctx.sampleRate * 0.3, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.05;
+  const src = ctx.createBufferSource();
+  const filter = ctx.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.value = 1200;
+  src.buffer = buffer;
+  src.connect(filter);
+  filter.connect(ctx.destination);
+  src.start();
 }
 
-/* Mischievous NO */
+/* Yes teasing */
+yes.addEventListener("touchstart", e => {
+  if (yesDodges < 2) {
+    e.preventDefault();
+    yesDodges++;
+    yes.style.transform = `translate(${yesDodges * 15}px,-10px)`;
+    setTimeout(() => yes.style.transform = "translate(0,0)", 300);
+  }
+});
+
+/* No escaping safely */
 function moveNo() {
-  const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-  const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+  const pad = 30;
+  const maxX = window.innerWidth - no.offsetWidth - pad;
+  const maxY = window.innerHeight - no.offsetHeight - pad;
+  no.style.left = Math.random() * maxX + "px";
+  no.style.top = Math.random() * maxY + "px";
 }
+no.addEventListener("touchstart", e => { e.preventDefault(); moveNo(); });
 
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", e => {
-  e.preventDefault();
-  moveNo();
-});
-
-/* YES */
-yesBtn.addEventListener("click", () => {
-  questionBox.classList.add("hidden");
-  loveBox.classList.remove("hidden");
-
-  setTimeout(playInkSound, 200);
-
+/* YES CLICK */
+yes.addEventListener("click", () => {
+  q.classList.add("hidden");
+  love.classList.remove("hidden");
+  playInk();
+  startRoses();
   setTimeout(() => {
-    loveBox.classList.add("hidden");
-    foreverBox.classList.remove("hidden");
-  }, 11000);
+    love.classList.add("hidden");
+    forever.classList.remove("hidden");
+  }, 10000);
 });
+
+function startRoses() {
+  for (let i = 0; i < 35; i++) {
+    const r = document.createElement("div");
+    r.className = "rose";
+    r.textContent = "🌹";
+    r.style.left = Math.random() * window.innerWidth + "px";
+    r.style.animationDuration = (7 + Math.random() * 5) + "s";
+    document.body.appendChild(r);
+  }
+}
 
 moveNo();
 </script>
